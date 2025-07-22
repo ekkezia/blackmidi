@@ -1,4 +1,4 @@
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import React from 'react';
 
 type InputMode = 'midi' | 'keyboard';

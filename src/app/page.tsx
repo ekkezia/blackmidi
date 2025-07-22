@@ -1,7 +1,7 @@
 'use client'
 
 import FilterContainer from '@/components/filter-container';
-import { NoteProvider } from './contexts/note-context';
+import { NoteProvider } from '../contexts/note-context';
 import Document from '@/components/document';
 import Keyboard from '@/components/keyboard';
 import { MidiLogger } from '@/components/midi-logger';

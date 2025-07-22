@@ -1,11 +1,11 @@
 import { cn, map } from '@/utils/utils';
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import MidiPlayer from './midi-player';
 import { useEffect, useState } from 'react';
 import { Tooltip } from './tooltip';
 import {  } from './input-selector';
 import { useConfig } from '@/hooks/useConfig';
-import Help from './help';
+import HelpButton from './help-button';
 import LockButton from './lock-button';
 
 export default function ControllerBoard({ className }: { className?: string }) {
@@ -60,7 +60,7 @@ export default function ControllerBoard({ className }: { className?: string }) {
 
             {/* Buttons */}
             <div className="flex gap-4">
-              <Help />
+              <HelpButton />
               <LockButton />
               {/* <OctaveButton /> */}
               {/* <OctaveButton isUp /> */}

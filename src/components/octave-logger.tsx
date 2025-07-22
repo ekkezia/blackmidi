@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 
 export default function OctaveLogger() {
   const { octave } = useNoteContext();

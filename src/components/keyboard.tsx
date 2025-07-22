@@ -1,6 +1,6 @@
 import { cn, map } from '@/utils/utils';
-import { black, leap, white } from './config/config';
-import { useNoteContext } from '@/app/contexts/note-context';
+import { black, leap, white } from '../config/config';
+import { useNoteContext } from '@/contexts/note-context';
 import MidiPlayer from './midi-player';
 import { useEffect, useMemo, useState } from 'react';
 import { Tooltip } from './tooltip';

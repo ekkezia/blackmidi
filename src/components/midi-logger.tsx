@@ -1,9 +1,9 @@
 'use client';
 
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import { useMIDIInput } from '@/hooks/useMIDIInput';
 import React, { useEffect, useRef } from 'react';
-import { QWERTY_KEYS } from './config/config';
+import { QWERTY_KEYS } from '../config/config';
 
 export const MidiLogger = () => {
   const { addNote, removeNote, inputType, setController } = useNoteContext();

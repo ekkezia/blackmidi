@@ -1,4 +1,4 @@
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import { useEffect, useRef, useState } from 'react';
 import { cn, map } from '@/utils/utils';
 import { useConfig } from '@/hooks/useConfig';

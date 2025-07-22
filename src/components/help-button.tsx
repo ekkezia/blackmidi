@@ -1,10 +1,10 @@
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import { cn } from '@/utils/utils';
 import { useCallback, useEffect } from 'react';
 import { Tooltip } from './tooltip';
 
 const helpMidiNote = 44;
-const Help = () => {
+const HelpButton = () => {
   const { showHelp, setShowHelp } = useNoteContext();
   const { notes } = useNoteContext();
 
@@ -25,4 +25,4 @@ const Help = () => {
   )
 }
 
-export default Help;
+export default HelpButton;

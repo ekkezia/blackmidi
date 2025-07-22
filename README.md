@@ -4,30 +4,38 @@ Welcome to my experimental web app for exploring jazz standards with your MIDI c
 
 This project uses [`usewebaudiosynth`](https://www.npmjs.com/package/usewebaudiosynth) to trigger sounds via Web Audio API.
 
+I'm using **Arturia MiniLab** for reference of keys, buttons and sliders mapping.
+
 ## 🎹 Features
 
-- Play jazz standards in real-time using a **MIDI keyboard**
+- Play music notes in real-time using a **MIDI keyboard / device**
 - Use MIDI to:
 
   - Scroll through sheet music
-  - Change website themes
-  - Control custom behaviors (with potential for user-defined mappings)
+  - Change website themes through hue filter
+  - [IN THE FUTURE]: Control custom behaviors (with potential for user-defined mappings)
 
-- Fall back to **laptop keyboard** input if MIDI is unavailable
-- Responsive interface for desktop/laptop devices
+- Fall back to **laptop keyboard** input if MIDI is unavailable (see the option on bottom left of the web app)
 
 ## 🖥️ Usage Instructions
 
 ### 🔌 Connect Your Device
 
 - Plug in your MIDI controller
-- Or use your laptop keyboard keys (see mappings below)
+- Or use your laptop keyboard keys
 - Select the input mode from the bottom-left toggle on the screen
 
 ### 📜 Sheet Interaction
 
-- Scroll and interact with sheet music using keys or MIDI
+- Scroll and interact with sheet music using the slider (with default mapping is **82**) on MIDI device
 - The currently selected standard will automatically update based on the first detected note
+
+### 🎨 Theme Color Filter Interaction
+
+- Rotate the knob on your midi to change the color of the web app according to the three filters below:
+  - **72**: hue
+  - **71**: grayscale
+  - **76**: invert
 
 ## 🧰 Keyboard Mappings
 
@@ -76,4 +84,4 @@ Have ideas or want to collaborate? Feel free to fork or contact me directly.
 
 ---
 
-> "Jazz is not just music, it's a way of life, it's a way of being, a way of thinking." – Nina Simone
+> ya like jazz? ( ͡° ͜ʖ ͡°)

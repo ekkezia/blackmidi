@@ -1,4 +1,4 @@
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import { cn } from '@/utils/utils';
 
 const HelpModal = () => {

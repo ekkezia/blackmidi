@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNoteContext } from '@/app/contexts/note-context';
+import { useNoteContext } from '@/contexts/note-context';
 import { useWebAudioSynth } from '@/hooks/useWebAudioSynth';
 
 export default function MidiPlayer() {

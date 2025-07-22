@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const mono = Space_Mono({
-  subsets: [ 'latin' ],
-  variable: '--font-bitcount',
-  weight: '400'
-});
+// const mono = Space_Mono({
+//   subsets: ['latin'],
+//   variable: '--font-space-mono',
+//   weight: ['400'],
+// });
 
 export const metadata: Metadata = {
   title: "blackmidi | @ekezia",
@@ -20,10 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${mono.variable} antialiased`}
-      >
-          {children}
+      <body className={`antialiased`}>
+        {children}
       </body>
     </html>
   );
