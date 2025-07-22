@@ -10,6 +10,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "blackmidi | @ekezia",
   description: "@ekezia",
+  icons: {
+    icon: '/favicon.ico', // or .png, .svg, etc.
+  },
 };
 
 export default function RootLayout({
