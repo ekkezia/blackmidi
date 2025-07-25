@@ -7,7 +7,7 @@ import { ScoreDisplay } from './score-display';
 const selectedSliderController = 82;
 
 const Document = ({ className }: { className?: string }) => {
-  const { notes, controller, showHelp, lock } = useNoteContext();
+  const { notes, controller, showHelp, lock, savedPreference } = useNoteContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { config } = useConfig();
@@ -26,9 +26,11 @@ const Document = ({ className }: { className?: string }) => {
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.style.transform = `translateY(50%)`;
+      const mappedValue = map(savedPreference.scrollV, 127, 0, 0, containerRef.current.clientHeight)
+
+      containerRef.current.style.transform = `translateY(${mappedValue}px)`;
     }
-  }, [containerRef]);
+  }, [containerRef, savedPreference]);
 
   useEffect(() => {
     if (controller.number === selectedSliderController && containerRef.current) {
@@ -45,7 +47,7 @@ const Document = ({ className }: { className?: string }) => {
 
   return (
     <div >
-    <div className={cn("w-[40vw] z-0 border border-foreground shadow-xl p-0 absolute bg-background min-h-[360px] bottom-0 translate-x-[-50%] left-[50%]", className, showHelp ? 'opacity-50 blur-xs pointer-events-none' : 'pointer-events-block opacity-100')}
+    <div className={cn("w-[90vw] md:w-[540px] z-0 border border-foreground shadow-xl p-0 absolute bg-background min-h-[360px] bottom-0 translate-x-[-50%] left-[50%]", className, showHelp ? 'opacity-50 blur-xs pointer-events-none' : 'pointer-events-block opacity-100')}
     ref={containerRef}
     >
     {config[currentDocIdx]?.score && <ScoreDisplay score={config[currentDocIdx].score} />}

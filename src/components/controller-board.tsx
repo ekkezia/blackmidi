@@ -7,28 +7,42 @@ import {  } from './input-selector';
 import { useConfig } from '@/hooks/useConfig';
 import HelpButton from './help-button';
 import LockButton from './lock-button';
+import SaveSettingsButton from './save-button';
 
+// The knobs controls audio effects like reverb, delay, distortion, and gain.
 export default function ControllerBoard({ className }: { className?: string }) {
-  const { showHelp, controller } = useNoteContext();
+  const { showHelp, controller, savedPreference, inputType, setSavedPreference } = useNoteContext();
   const { controllerConfig } = useConfig();
   const [mappedValue, setMappedValue] = useState<{ [key: string] : number }>({});
-  const [mappedKnobValue, setMappedKnobValue] = useState(0); // visual UI
+  // const [mappedKnobValue, setMappedKnobValue] = useState(0); // visual UI
 
   useEffect(() => {
-    // console.log('knob',mappedValue, mappedKnobValue);
-  }, [mappedKnobValue, mappedValue])
+    // on first load, use the value from saved preference
+      setMappedValue({
+        reverb: savedPreference.reverb,
+        delay: savedPreference.delay,
+        distortion: savedPreference.distortion,
+        gain: savedPreference.gain,
+      })
+  }, [savedPreference]);
+
   useEffect(() => {
     const knobMatch = controllerConfig?.knobs.find(item => item.midiNote === controller.number);
   
     if (knobMatch?.for) {
+      const effect = knobMatch.for!;
+
       setMappedValue(prev => ({
         ...prev,
-        [knobMatch.for!]: map(controller.value, 0, 127, -127, 127),
+        [effect]: map(controller.value, 0, 127, -127, 127),
+      }));    
+
+      setSavedPreference((prev) => ({
+        ...prev,
+        [effect]: map(controller.value, 0, 127, -127, 127)
       }));
     }
-  
-    setMappedKnobValue(map(controller.value, 0, 127, -127, 127));
-  }, [controller, controllerConfig?.knobs]);
+    }, [controller, controllerConfig?.knobs, setSavedPreference]);
     
   if (!controllerConfig) return null;
   return (
@@ -39,10 +53,10 @@ export default function ControllerBoard({ className }: { className?: string }) {
 
       <div className="flex gap-8 h-fit items-center">
       {/* Controller Knob */}
-      <div className="flex place-items-center gap-8">
+      <div className={cn("flex place-items-center gap-8", inputType === 'midi' ? 'opacity-100 cursor-crosshair' : 'opacity-20 cursor-not-allowed')}>
       {controllerConfig.knobs.map(({ midiNote, label, for: knobFor }) => (
   knobFor && (
-            <Tooltip content={label ?? ''} key={`knob-${label}`}>            
+            <Tooltip content={inputType !== 'midi' ? 'Only w/ MIDI input' :label ?? ''} key={`knob-${label}`}>            
               <div
                 id={`knob_${knobFor}_${midiNote}`}
                 className="rounded-4xl w-8 h-8 border border-foreground relative transition-duration-300"
@@ -62,6 +76,7 @@ export default function ControllerBoard({ className }: { className?: string }) {
             <div className="flex gap-4">
               <HelpButton />
               <LockButton />
+              <SaveSettingsButton />
               {/* <OctaveButton /> */}
               {/* <OctaveButton isUp /> */}
               {/* <OctaveLogger /> */}

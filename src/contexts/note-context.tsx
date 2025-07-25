@@ -1,4 +1,15 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+
+export type TPreference = {
+  scrollV: number;
+  hue: number;
+  grayscale: number;
+  invert: number;
+  reverb: number;
+  delay: number;
+  distortion: number;
+  gain: number;
+}
 
 type NoteContextType = {
   showHelp: boolean;
@@ -15,17 +26,55 @@ type NoteContextType = {
   setController: (controller: { number: number, value: number }) => void;
   lock: boolean;
   setLock: (show: boolean) => void;
+  hasSaved: boolean;
+  setHasSaved: (hasSaved: boolean) => void;
+  savedPreference: TPreference;
+  setSavedPreference: React.Dispatch<React.SetStateAction<TPreference>>;
 };
 
 const NoteContext = createContext<NoteContextType | undefined>(undefined);
 
 export const NoteProvider = ({ children }: { children: ReactNode }) => {
   const [showHelp, setShowHelp] = useState<boolean>(true);
-  const [inputType, setInputType] = useState<'midi' | 'keyboard'>('keyboard');
+  const [inputType, setInputType] = useState<'midi' | 'keyboard'>('midi');
   const [notes, setNotes] = useState<number[]>([]);
   const [controller, setController] = useState({ number: 0, value: 0 });
   const [lock, setLock] = useState(false);
   const [octave, setOctave] = useState(0);
+
+  const [hasSaved, setHasSaved]= useState(false); // save to local storage
+  const [savedPreference, setSavedPreference] = useState({ scrollV: 0, hue: 0, grayscale: 0, invert: 0, reverb: 0, delay: 0, distortion: 0, gain: 0 }); // TO BE CHANGED to just preference
+
+  useEffect(() => {
+    // on first load, check local storage for saved preferences
+    const savedScrollV = localStorage.getItem('scrollV');
+    const savedHue = localStorage.getItem('hue');
+    const savedGrayscale = localStorage.getItem('grayscale');
+    const savedInvert = localStorage.getItem('invert');
+    const savedReverb = localStorage.getItem('reverb');
+    const savedDelay = localStorage.getItem('delay');
+    const savedDistortion = localStorage.getItem('distortion');
+    const savedGain = localStorage.getItem('gain');
+
+    setSavedPreference({
+      scrollV: savedScrollV ? parseInt(savedScrollV, 10) : 0,
+      hue: savedHue ? parseInt(savedHue, 10) : 0,
+      grayscale: savedGrayscale ? parseInt(savedGrayscale, 10) : 0,
+      invert: savedInvert ? parseInt(savedInvert, 10) : 0,
+      reverb: savedReverb ? parseInt(savedReverb, 10) : 0,
+      delay: savedDelay ? parseInt(savedDelay, 10) : 0,
+      distortion: savedDistortion ? parseInt(savedDistortion, 10) : 0,
+      gain: savedGain ? parseInt(savedGain, 10) : 0,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (hasSaved) {
+      setTimeout(() => {
+        setHasSaved(false)
+      }, 500);
+    }
+  }, [hasSaved])
 
   const addNote = (note: number, isArray = true) => {
     if (isArray) {
@@ -51,7 +100,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <NoteContext.Provider value={{ showHelp, setShowHelp, inputType, setInputType, notes, addNote, removeNote, controller, setController, lock, setLock, octave, increaseOctave, decreaseOctave }}>
+    <NoteContext.Provider value={{ showHelp, setShowHelp, inputType, setInputType, notes, addNote, removeNote, controller, setController, lock, setLock, octave, increaseOctave, decreaseOctave, savedPreference, setSavedPreference, hasSaved, setHasSaved }}>
       {children}
     </NoteContext.Provider>
   );

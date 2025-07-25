@@ -9,27 +9,44 @@ import { useConfig } from '@/hooks/useConfig';
 
 const KEY_WIDTH = 63;
 const KEY_HEIGHT = 180;
+const SLIDER_HEIGHT = 130;
 export default function Keyboard({ className }: { className?: string }) {
-  const { showHelp, inputType, notes, addNote, removeNote, controller } = useNoteContext();
+  const { showHelp, inputType, notes, addNote, removeNote, controller, savedPreference, setSavedPreference } = useNoteContext();
   const { config, controllerConfig } = useConfig();
   const [mappedValue, setMappedValue] = useState<{ [key: string] : number }>({});
-  const [mappedKnobValue, setMappedKnobValue] = useState(0); // visual UI
 
   useEffect(() => {
-    // console.log('knob',mappedValue, mappedKnobValue);
-  }, [mappedKnobValue, mappedValue])
+    // map all keys from savedPreference initially
+    const initialMapped: { [key: string]: number } = {};
+    Object.entries(savedPreference).forEach(([key, value]) => {
+      initialMapped[key] = map(value, 127, 0, 0, SLIDER_HEIGHT - 4.5);
+    });
+    setMappedValue(initialMapped);
+  }, [savedPreference]); // only on mount
+  
+  // useEffect(() => { console.log('mapped', mappedValue)}, [mappedValue])
+
   useEffect(() => {
-    const sliderMatch = controllerConfig?.sliders.find(item => item.midiNote === controller.number);
+    if (!controllerConfig || !controller) return;
   
-    if (sliderMatch?.for) {
-      setMappedValue(prev => ({
-        ...prev,
-        [sliderMatch.for!]: map(controller.value, 127, 0, 0, KEY_HEIGHT),
-      }));
-    }
+    const sliderMatch = controllerConfig.sliders.find(item => item.midiNote === controller.number);
+    if (!sliderMatch?.for) return;
   
-    setMappedKnobValue(map(controller.value, 127, 0, 0, KEY_HEIGHT));
-  }, [controller, controllerConfig?.sliders]);
+    const visualValue = map(controller.value, 127, 0, 0, SLIDER_HEIGHT - 4.5);
+  
+    // only update changed slider visually
+    setMappedValue(prev => ({
+      ...prev,
+      [sliderMatch.for!]: visualValue,
+    }));
+  
+    // update raw MIDI value in savedPreference
+    setSavedPreference(prev => ({
+      ...prev,
+      [sliderMatch.for!]: controller.value,
+    }));
+  }, [controller, controllerConfig, setSavedPreference]);
+    
 
   const whiteKeys = useMemo(
     () => config.filter((item) => white.includes(item.midiNote)),
@@ -53,26 +70,29 @@ export default function Keyboard({ className }: { className?: string }) {
 
       <div className="flex gap-8 h-fit items-center">
       {/* Controller slider */}
+      <div className={cn("flex flex-col gap-4 border py-1 px-4", inputType === 'midi' ? 'opacity-100 cursor-crosshair' : 'opacity-20 cursor-not-allowed')} style={{ height: KEY_HEIGHT}}>
+       <span className="text-xs text-foreground">STYLE</span>
       <div className="flex gap-8 items-center" >
         {
           controllerConfig.sliders.map(({ midiNote, label, for: sliderFor }) => (
-            <Tooltip content={label ?? ''} key={`slider-${midiNote}`}>            
+            <Tooltip content={inputType !== 'midi' ? 'Only w/ MIDI input' : label ?? ''} key={`slider-${midiNote}`}>            
               <div
                 id={`knob_${sliderFor}`}
                 className="relative w-4 flex justify-center"
-                style={{ height: KEY_HEIGHT }}
+                style={{ height: SLIDER_HEIGHT }}
               >
                 <div className="w-1 h-full border border-foreground" />
 
                   <div className="w-full h-1 border border-foreground absolute bg-background transition-duration-300" 
                     style={{
-                    transform: controller.number === Number(midiNote) ? `translateY(${mappedValue[sliderFor ?? '']}px)` : 'translateX(0px) translateY(0px)'
+                    transform: `translateY(${mappedValue[sliderFor!]}px)`
                   }} 
                 />
               </div>
             </Tooltip>
           ))
         }
+      </div>
       </div>
       </div>
 

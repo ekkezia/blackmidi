@@ -11,12 +11,12 @@ export const useConfig = () => {
     getSongs()
       .then((data) => {
         setConfig(data);
-        console.log(data)
+        // console.log(data)
       });
 
       getControllers().then((data) => {
         setControllerConfig(data[0]);
-        console.log(data);
+        // console.log(data);
       })
   }, []);
 

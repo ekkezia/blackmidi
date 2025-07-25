@@ -3,8 +3,8 @@ import { useNoteContext } from '@/contexts/note-context';
 import { useWebAudioSynth } from '@/hooks/useWebAudioSynth';
 
 export default function MidiPlayer() {
-  const { notes, controller } = useNoteContext();
-  const { playNotes, stopAll } = useWebAudioSynth();
+  const { notes, controller, savedPreference } = useNoteContext();
+  const { playNotes, stopAll } = useWebAudioSynth(savedPreference);
 
   useEffect(() => {
     // console.log('play', notes)
