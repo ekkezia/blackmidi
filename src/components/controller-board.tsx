@@ -46,7 +46,7 @@ export default function ControllerBoard({ className }: { className?: string }) {
 
         setSavedPreference(prev => ({
           ...prev,
-          midiType: MIDI_TYPE_STRING[midiTypeIdx] ??  'unknown',
+          midiType: midiTypeIdx ??  0,
         }));
       } else {
         setMappedValue(prev => ({

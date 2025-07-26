@@ -22,7 +22,7 @@ export default function ControllerMonitor() {
   return (
     <div className="p-2 border border-foreground w-[120px] h-12 text-xs overflow-y-scroll">
           <ul className='h-[18px] overflow-hidden uppercase'>
-            {savedPreference.midiType}
+            {MIDI_TYPE_STRING[savedPreference.midiType]}
           </ul>
         <p>{controller && `CC: ${controller.number}`}</p>
         <p>{controller && `VAL ${controller.value}`}</p>
