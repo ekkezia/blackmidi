@@ -1,7 +1,7 @@
 import { cn, map } from '@/utils/utils';
 import { black, leap, white } from '../config/config';
 import { useNoteContext } from '@/contexts/note-context';
-import MidiPlayer from './midi-player';
+import KeyboardMonitor from './keyboard-monitor';
 import { useEffect, useMemo, useState } from 'react';
 import { Tooltip } from './tooltip';
 import { InputSelector } from './input-selector';
@@ -64,7 +64,7 @@ export default function Keyboard({ className }: { className?: string }) {
     <div className={cn("flex items-center gap-8 px-8", className, showHelp ? 'opacity-50 blur-[1px] pointer-events-none' : 'pointer-events-block opacity-100')}>
         <div className="h-full flex flex-col gap-4">
           <span>blackmidi</span>
-          <MidiPlayer />
+          <KeyboardMonitor />
           <InputSelector />
         </div>
 

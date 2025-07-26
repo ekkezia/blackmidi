@@ -1,6 +1,6 @@
 import { cn, map } from '@/utils/utils';
 import { useNoteContext } from '@/contexts/note-context';
-import MidiPlayer from './midi-player';
+import MidiPlayer from './keyboard-monitor';
 import { useEffect, useState } from 'react';
 import { Tooltip } from './tooltip';
 import {  } from './input-selector';
@@ -8,6 +8,8 @@ import { useConfig } from '@/hooks/useConfig';
 import HelpButton from './help-button';
 import LockButton from './lock-button';
 import SaveSettingsButton from './save-button';
+import ControllerMonitor from './controller-monitor';
+import { MIDI_TYPE_STRING } from '@/config/config';
 
 // The knobs controls audio effects like reverb, delay, distortion, and gain.
 export default function ControllerBoard({ className }: { className?: string }) {
@@ -19,9 +21,9 @@ export default function ControllerBoard({ className }: { className?: string }) {
   useEffect(() => {
     // on first load, use the value from saved preference
       setMappedValue({
-        reverb: savedPreference.reverb,
+        // reverb: savedPreference.reverb,
         delay: savedPreference.delay,
-        distortion: savedPreference.distortion,
+        // distortion: savedPreference.distortion,
         gain: savedPreference.gain,
       })
   }, [savedPreference]);
@@ -30,25 +32,42 @@ export default function ControllerBoard({ className }: { className?: string }) {
     const knobMatch = controllerConfig?.knobs.find(item => item.midiNote === controller.number);
   
     if (knobMatch?.for) {
-      const effect = knobMatch.for!;
+      const effect = knobMatch.for;
+  
+      if (effect === 'midiType') {
+        setMappedValue(prev => ({
+          ...prev,
+          midiType: map(controller.value, 0, 127, -127, 127),
+        }));
+  
+        // const mappedValue = Math.floor(map(controller.value, 0, 127, -127, 127));
+        const midiTypeIdx = Math.floor(controller.value / 2) % MIDI_TYPE_STRING.length;
+        console.log('mappedValue', midiTypeIdx);
 
-      setMappedValue(prev => ({
-        ...prev,
-        [effect]: map(controller.value, 0, 127, -127, 127),
-      }));    
-
-      setSavedPreference((prev) => ({
-        ...prev,
-        [effect]: map(controller.value, 0, 127, -127, 127)
-      }));
+        setSavedPreference(prev => ({
+          ...prev,
+          midiType: MIDI_TYPE_STRING[midiTypeIdx] ??  'unknown',
+        }));
+      } else {
+        setMappedValue(prev => ({
+          ...prev,
+          [effect]: map(controller.value, 0, 127, -127, 127),
+        }));
+  
+        setSavedPreference(prev => ({
+          ...prev,
+          [effect]: map(controller.value, 0, 127, -127, 127),
+        }));
+      }
     }
-    }, [controller, controllerConfig?.knobs, setSavedPreference]);
-    
-  if (!controllerConfig) return null;
+  }, [controller, controllerConfig?.knobs, setSavedPreference]);
+
+
+    if (!controllerConfig) return null;
   return (
     <div className={cn("flex items-center justify-between gap-8 px-8", className, showHelp ? 'opacity-50 blur-[1px] pointer-events-none' : 'pointer-events-block opacity-100')}>
         <div className="h-full flex flex-col gap-4">
-          <MidiPlayer />
+          <ControllerMonitor />
         </div>
 
       <div className="flex gap-8 h-fit items-center">

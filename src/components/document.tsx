@@ -25,14 +25,6 @@ const Document = ({ className }: { className?: string }) => {
   }, [notes, config, lock]); // Don't forget to include config here!
 
   useEffect(() => {
-    if (containerRef.current) {
-      const mappedValue = map(savedPreference.scrollV, 127, 0, 0, containerRef.current.clientHeight)
-
-      containerRef.current.style.transform = `translateY(${mappedValue}px)`;
-    }
-  }, [containerRef, savedPreference]);
-
-  useEffect(() => {
     if (controller.number === selectedSliderController && containerRef.current) {
       // console.log('controller', controller)
       const mappedValue = map(controller.value, 127, 0, 0, containerRef.current.clientHeight)

@@ -5,7 +5,7 @@ export type TPreference = {
   hue: number;
   grayscale: number;
   invert: number;
-  reverb: number;
+  midiType: OscillatorType;
   delay: number;
   distortion: number;
   gain: number;
@@ -43,7 +43,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   const [octave, setOctave] = useState(0);
 
   const [hasSaved, setHasSaved]= useState(false); // save to local storage
-  const [savedPreference, setSavedPreference] = useState({ scrollV: 0, hue: 0, grayscale: 0, invert: 0, reverb: 0, delay: 0, distortion: 0, gain: 0 }); // TO BE CHANGED to just preference
+  const [savedPreference, setSavedPreference] = useState({ scrollV: 0, hue: 0, grayscale: 0, invert: 0,   midiType: 'sine' as OscillatorType, delay: 0, distortion: 0, gain: 0 }); // TO BE CHANGED to just preference
 
   useEffect(() => {
     // on first load, check local storage for saved preferences
@@ -51,7 +51,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     const savedHue = localStorage.getItem('hue');
     const savedGrayscale = localStorage.getItem('grayscale');
     const savedInvert = localStorage.getItem('invert');
-    const savedReverb = localStorage.getItem('reverb');
+    const savedMidiType = localStorage.getItem('midiType');
     const savedDelay = localStorage.getItem('delay');
     const savedDistortion = localStorage.getItem('distortion');
     const savedGain = localStorage.getItem('gain');
@@ -61,7 +61,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
       hue: savedHue ? parseInt(savedHue, 10) : 0,
       grayscale: savedGrayscale ? parseInt(savedGrayscale, 10) : 0,
       invert: savedInvert ? parseInt(savedInvert, 10) : 0,
-      reverb: savedReverb ? parseInt(savedReverb, 10) : 0,
+      midiType: savedMidiType as OscillatorType ?? 'sine',
       delay: savedDelay ? parseInt(savedDelay, 10) : 0,
       distortion: savedDistortion ? parseInt(savedDistortion, 10) : 0,
       gain: savedGain ? parseInt(savedGain, 10) : 0,

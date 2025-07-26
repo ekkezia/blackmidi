@@ -11,3 +11,5 @@ export const QWERTY_KEYS: Record<string, number> = {
   ...whiteLaptopKeys,
   ...blackLaptopKeys,
 };
+
+export const MIDI_TYPE_STRING: OscillatorType[] = ['sine', 'square', 'triangle', 'sawtooth'];
