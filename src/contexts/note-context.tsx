@@ -30,6 +30,8 @@ type NoteContextType = {
   setHasSaved: (hasSaved: boolean) => void;
   savedPreference: TPreference;
   setSavedPreference: React.Dispatch<React.SetStateAction<TPreference>>;
+  midiSupported?: boolean;
+  setMidiSupported?: (supported: boolean) => void;
 };
 
 const NoteContext = createContext<NoteContextType | undefined>(undefined);
@@ -41,6 +43,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   const [controller, setController] = useState({ number: 0, value: 0 });
   const [lock, setLock] = useState(false);
   const [octave, setOctave] = useState(0);
+  const [midiSupported, setMidiSupported] = useState<boolean>(true);
 
   const [hasSaved, setHasSaved]= useState(false); // save to local storage
   const [savedPreference, setSavedPreference] = useState({ scrollV: 0, hue: 0, grayscale: 0, invert: 0,   midiType: 0, delay: 0, distortion: 0, gain: 0 }); // TO BE CHANGED to just preference
@@ -100,7 +103,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <NoteContext.Provider value={{ showHelp, setShowHelp, inputType, setInputType, notes, addNote, removeNote, controller, setController, lock, setLock, octave, increaseOctave, decreaseOctave, savedPreference, setSavedPreference, hasSaved, setHasSaved }}>
+    <NoteContext.Provider value={{ showHelp, setShowHelp, inputType, setInputType, notes, addNote, removeNote, controller, setController, lock, setLock, octave, increaseOctave, decreaseOctave, savedPreference, setSavedPreference, hasSaved, setHasSaved, midiSupported, setMidiSupported }}>
       {children}
     </NoteContext.Provider>
   );

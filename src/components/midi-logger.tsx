@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import { QWERTY_KEYS } from '../config/config';
 
 export const MidiLogger = () => {
-  const { addNote, removeNote, inputType, setController } = useNoteContext();
+  const { addNote, removeNote, inputType, setController, setMidiSupported, midiSupported } = useNoteContext();
   const hasAutoSwitched = useRef(false);
   const pressedKeys = useRef<Set<string>>(new Set());
 
@@ -21,17 +21,21 @@ export const MidiLogger = () => {
       setController({ number: controller, value });
     },
     () => {
+      setMidiSupported?.(true);
       // ✅ Only auto-switch to MIDI once
       if (!hasAutoSwitched.current) {
         // setInputType('midi');
         hasAutoSwitched.current = true;
       }
     },
-    inputType,
+    (error) => {
+      setMidiSupported?.(false);
+    },
+    inputType
   );
 
   useEffect(() => {
-    if (inputType !== 'keyboard') return;
+    if (inputType !== 'keyboard' || !midiSupported) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
@@ -58,7 +62,7 @@ export const MidiLogger = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [addNote, removeNote, inputType]);
+  }, [addNote, removeNote, inputType, midiSupported]);
 
 
   return (

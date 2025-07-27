@@ -1,6 +1,5 @@
 import { cn, map } from '@/utils/utils';
 import { useNoteContext } from '@/contexts/note-context';
-import MidiPlayer from './keyboard-monitor';
 import { useEffect, useState } from 'react';
 import { Tooltip } from './tooltip';
 import {  } from './input-selector';

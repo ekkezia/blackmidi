@@ -8,14 +8,23 @@ export function useMIDIInput(
   onNoteOff: MIDIMessageCallback,
   onControlChange?: MIDICCMessageCallback,
   onMidiDetected?: () => void,
+  onMidiFailed?: (error: string) => void,
   inputType?: 'midi' | 'keyboard',
 ) {
   useEffect(() => {
     if (inputType !== 'midi') return; // ✅ Skip setting up MIDI listeners if not MIDI input
   
+    // Check if Web MIDI API is supported
+    if (!navigator.requestMIDIAccess) {
+      const errorMsg = 'Web MIDI API is not supported in this browser';
+      console.warn(errorMsg);
+      if (onMidiFailed) {
+        onMidiFailed(errorMsg);
+      }
+      return;
+    }
+
     const handleMIDIMessage = (event: MIDIMessageEvent) => {
-
-
       const data = event.data;
       if (!(data instanceof Uint8Array)) {
         console.warn('Unexpected MIDI data:', data);
@@ -60,7 +69,11 @@ export function useMIDIInput(
         }
       })
       .catch((err) => {
-        console.error('Failed to access MIDI devices:', err);
+        const errorMsg = `Failed to access MIDI devices: ${err.message}`;
+        console.error(errorMsg);
+        if (onMidiFailed) {
+          onMidiFailed(errorMsg);
+        }
       });
-  }, [onNoteOn, onNoteOff, onControlChange, onMidiDetected, inputType]);
+  }, [onNoteOn, onNoteOff, onControlChange, onMidiDetected, onMidiFailed, inputType]);
 }
