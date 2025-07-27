@@ -27,7 +27,7 @@ const Document = ({ className }: { className?: string }) => {
   useEffect(() => {
     if (controller.number === selectedSliderController && containerRef.current) {
       // console.log('controller', controller)
-      const mappedValue = map(controller.value, 127, 0, 0, containerRef.current.clientHeight)
+      const mappedValue = map(controller.value, 127, 0, -containerRef.current.clientHeight / 2, containerRef.current.clientHeight /2)
       containerRef.current.style.transform = `translateY(${mappedValue}px)`;
     }
 

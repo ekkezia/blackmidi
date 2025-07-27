@@ -1,24 +1,46 @@
 import { useNoteContext } from '@/contexts/note-context';
 import { cn } from '@/utils/utils';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Tooltip } from './tooltip';
 
-// const lockMidiNote = 45;
+const lockMidiNote = 46;
 const SaveSettingsButton = () => {
-  const { savedPreference, hasSaved, setHasSaved } = useNoteContext();
+  const { notes, savedPreference, hasSaved, setHasSaved } = useNoteContext();
 
-  const handleClick = useCallback(() => {
-    // saving to local storage
-    if (!hasSaved) {
-      setHasSaved(true);
-      console.log('Saving preference', savedPreference, hasSaved);
-
-      Object.entries(savedPreference).forEach(([key, val]) => {
-        localStorage.setItem(key, val.toString());
-      })
+    const timeoutRef = useRef(null);
   
-    }
-}, [hasSaved, setHasSaved, savedPreference]);
+    const handleClick = useCallback(() => {
+      // saving to local storage
+      if (!hasSaved) {
+        setHasSaved(true);
+        console.log('Saving preference', savedPreference, hasSaved);
+  
+        Object.entries(savedPreference).forEach(([key, val]) => {
+          localStorage.setItem(key, val.toString());
+        })
+    
+      }
+  }, [hasSaved, setHasSaved, savedPreference]);
+  
+    useEffect(() => {
+      let timeoutLock: NodeJS.Timeout | undefined;
+      
+      if (notes[0] === lockMidiNote) {
+        // Set new timeout
+        timeoutLock = setTimeout(() => {
+          handleClick();
+        }, 50);
+      }
+  
+      // Cleanup timeout on unmount
+      return () => {
+        if (timeoutLock) {
+          clearTimeout(timeoutLock);
+        }
+      };
+    }, [notes, handleClick]);
+  
+  
 
   return (
     <Tooltip content={hasSaved ? 'Preference is saved.' : 'Save new preference'}>

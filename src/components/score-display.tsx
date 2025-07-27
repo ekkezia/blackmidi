@@ -26,7 +26,7 @@ function renderChordSymbol(chord: string): React.ReactNode {
 
 export const ScoreDisplay = ({ score }: { score: ScoreData }) => {
   return (
-    <div className="bg-black text-foreground p-4 font-mono text-lg w-full h-full">
+    <div className="text-foreground p-4 font-mono text-lg w-full h-full">
       {/* Title and composer row */}
       <div className="text-center flex-1 font-bold text-xl leading-tight">
           {score.title}
