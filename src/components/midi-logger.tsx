@@ -1,12 +1,17 @@
 'use client';
+// this component initialize useMIDIInput and useControllerEffect
 
 import { useNoteContext } from '@/contexts/note-context';
 import { useMIDIInput } from '@/hooks/useMIDIInput';
 import React, { useEffect, useRef } from 'react';
-import { QWERTY_KEYS } from '../config/config';
+import { DEFAULT_CONFIG, QWERTY_KEYS } from '../config/config';
+import { useControllerEffect } from '@/hooks/useControllerEffect';
+import { useConfig } from '@/hooks/useConfig';
 
 export const MidiLogger = () => {
-  const { addNote, removeNote, inputType, setController, setMidiSupported, midiSupported } = useNoteContext();
+  const { addNote, removeNote, inputType, controller,setController, setMidiSupported, midiSupported, setPreference, preference } = useNoteContext();
+  const { controllerConfig } = useConfig();
+
   const hasAutoSwitched = useRef(false);
   const pressedKeys = useRef<Set<string>>(new Set());
 
@@ -65,6 +70,9 @@ export const MidiLogger = () => {
   }, [addNote, removeNote, inputType, midiSupported]);
 
 
+    // Use the centralized controller effect
+    const mappedValues = useControllerEffect(inputType, controller ?? null, controllerConfig ?? DEFAULT_CONFIG, setPreference, preference);
+  
   return (
     <></>
   );

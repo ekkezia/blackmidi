@@ -47,3 +47,45 @@ body {
 .piano-key.white.active path {
   fill: red !important;
 }
+
+/* Custom range input for vertical slider */
+input[type="range"].custom-vertical {
+  appearance: none;
+  background: transparent;
+  writing-mode: bt-lr; /* vertical */
+  height: 130px;
+  width: 4px;
+}
+
+/* Track styling */
+input[type="range"].custom-vertical::-webkit-slider-runnable-track {
+  height: 4px; /* Visible track height after rotation */
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+input[type="range"].custom-vertical::-webkit-slider-thumb {
+  appearance: none;
+  width: 6px;  /* width after rotation becomes height */
+  height: 20px; /* height after rotation becomes visible width */
+  background: var(--color-background);
+  border: 1px solid currentColor;
+  cursor: pointer;
+  margin-top: -9px;
+  &:hover {
+    background: currentColor;
+  }
+}
+
+input[type="range"].custom-vertical::-moz-range-track {
+  height: 4px;
+  background: currentColor;
+}
+
+input[type="range"].custom-vertical::-moz-range-thumb {
+  width: 6px;
+  height: 20px;
+  background: transparent;
+  border: 2px solid currentColor;
+  cursor: pointer;
+}

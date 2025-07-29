@@ -7,7 +7,7 @@ import { map } from '@/utils/utils';
 import { Controller } from '@/sanity/lib/queries';
 import { TPreference } from '@/contexts/note-context';
 
-const SLIDER_HEIGHT = 130;
+export const SLIDER_HEIGHT = 130;
 
 interface ControllerValue {
   number: number;
@@ -22,6 +22,7 @@ interface MappedValues {
 const sliderTypeList = ['scrollV', 'hue', 'grayscale', 'invert'];
 
 export function useControllerEffect(
+  inputType: 'keyboard' | 'midi',
   controller: ControllerValue | null | undefined,
   controllerConfig: Controller | null | undefined,
   setPreference: React.Dispatch<React.SetStateAction<TPreference>>,
@@ -54,7 +55,7 @@ export function useControllerEffect(
 
   // Handle controller changes
   useEffect(() => {
-    if (!controllerConfig || !controller) return;
+    if (!controllerConfig || !controller || inputType === 'keyboard') return;
 
     // Check if it's a slider
     const sliderMatch = controllerConfig.sliders?.find(item => item.midiNote === controller.number);
@@ -96,7 +97,7 @@ export function useControllerEffect(
           [effect]: mappedValue,
         }));
     }
-  }, [controller, controllerConfig, setPreference]);
+  }, [controller, controllerConfig, setPreference, inputType]);
 
   return mappedValues;
 }

@@ -1,12 +1,12 @@
 import { cn } from '@/utils/utils';
-import { black, DEFAULT_CONFIG, leap, white } from '../config/config';
+import { black, leap, white } from '../config/config';
 import { useNoteContext } from '@/contexts/note-context';
 import KeyboardMonitor from './keyboard-monitor';
 import { useMemo } from 'react';
 import { Tooltip } from './tooltip';
 import { InputSelector } from './input-selector';
 import { useConfig } from '@/hooks/useConfig';
-import { useControllerEffect } from '@/hooks/useControllerEffect'; // Import the new hook
+import { SLIDER_HEIGHT } from '@/hooks/useControllerEffect'; // Import the new hook
 
 const KEY_WIDTH = 63;
 const KEY_HEIGHT = 180;
@@ -16,12 +16,9 @@ interface KeyboardProps {
 }
 
 export default function Keyboard({ className }: KeyboardProps) {
-  const { showHelp, inputType, notes, addNote, removeNote, controller, preference, setPreference } = useNoteContext();
+  const { showHelp, inputType, notes, addNote, removeNote, preference, setPreference } = useNoteContext();
   const { config, controllerConfig } = useConfig();
   
-  // Use the centralized controller effect
-  const mappedValues = useControllerEffect(controller ?? null, controllerConfig ?? DEFAULT_CONFIG, setPreference, preference);
-
   const whiteKeys = useMemo(
     () => config?.filter((item) => white.includes(item.midiNote)) || [],
     [config]
@@ -35,7 +32,7 @@ export default function Keyboard({ className }: KeyboardProps) {
   if (!controllerConfig || !config) return null;
   
   return (
-    <div className={cn("flex items-center gap-8 px-8", className, showHelp ? 'opacity-50 blur-[1px] pointer-events-none' : 'pointer-events-block opacity-100')}>
+    <div className={cn("flex items-center gap-8 px-8", className, showHelp ? 'opacity-50 blur-[1px] pointer-events-none' : 'pointer-events-auto opacity-100')}>
       <div className="h-full flex flex-col gap-4">
         <span>blackmidi</span>
         <KeyboardMonitor />
@@ -44,21 +41,32 @@ export default function Keyboard({ className }: KeyboardProps) {
 
       <div className="flex gap-8 h-fit items-center">
         {/* Controller slider */}
-        <div className={cn("flex flex-col gap-4 border py-1 px-4", inputType === 'midi' ? 'opacity-100 cursor-crosshair' : 'opacity-20 cursor-not-allowed')} style={{ height: KEY_HEIGHT}}>
+        <div className={cn("flex flex-col gap-4 border py-1 px-4")} style={{ height: KEY_HEIGHT}}>
           <span className="text-xs text-foreground">STYLE</span>
           <div className="flex gap-8 items-center">
             {controllerConfig.sliders.map(({ midiNote, label, for: sliderFor }) => (
-              <Tooltip content={inputType !== 'midi' ? 'Only w/ MIDI input' : label ?? ''} key={`slider-${midiNote}`}>            
+              <Tooltip content={inputType !== 'midi' ? 'Only w/ MIDI input' : `${midiNote} -> ${label}`} key={`slider-${midiNote}`}>            
                 <div
                   id={`knob_${sliderFor}`}
-                  className="relative w-4 flex justify-center"
-                  style={{ height: 130 }}
+                  className="relative w-[30px] h-[130px] flex items-center justify-center overflow-visible"
                 >
-                  <div className="w-1 h-full border border-foreground" />
-                  <div className="w-full h-1 border border-foreground absolute bg-background transition-duration-300" 
+                  <input
+                    type="range"
+                    min={0}
+                    max={127}
+                    step={1}
+                    value={preference[sliderFor! as keyof typeof preference] ?? 0}
+                    onChange={(e) => {                      
+                      const newValue = parseInt(e.target.value, 10);
+                      setPreference((prev) => ({
+                        ...prev,
+                        [sliderFor!]: newValue
+                      }));
+                    }}
+                    className={cn("custom-vertical appearance-none absolute bg-transparent rotate-[-90deg]", inputType === 'keyboard' ? 'pointer-events-auto' : 'pointer-events-none')}
                     style={{
-                      transform: `translateY(${mappedValues.sliders[sliderFor!] || 0}px)`
-                    }} 
+                      width: SLIDER_HEIGHT,
+                    }}
                   />
                 </div>
               </Tooltip>
