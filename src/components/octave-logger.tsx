@@ -1,12 +1,12 @@
-import React from 'react';
-import { useNoteContext } from '@/contexts/note-context';
+// import React from 'react';
+// import { useNoteContext } from '@/contexts/note-context';
 
-export default function OctaveLogger() {
-  const { octave } = useNoteContext();
+// export default function OctaveLogger() {
+//   const { octave } = useNoteContext();
 
-  return (
-    <div className="p-2 border border-foreground w-[120px] h-12 text-xs overflow-y-hidden">
-      <p>{`OCTAVE: ${octave}`}</p>
-    </div>
-  );
-}
+//   return (
+//     <div className="p-2 border border-foreground w-[120px] h-12 text-xs overflow-y-hidden">
+//       <p>{`OCTAVE: ${octave}`}</p>
+//     </div>
+//   );
+// }
