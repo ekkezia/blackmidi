@@ -1,3 +1,6 @@
+// Initialize Web MIDI API support
+// This hook manages MIDI input, allowing for note on/off events and control changes.
+// It also handles MIDI device detection and error handling.
 import { useEffect } from 'react';
 
 type MIDIMessageCallback = (note: number, velocity?: number) => void;

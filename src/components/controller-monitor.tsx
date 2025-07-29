@@ -1,18 +1,23 @@
+// Controller monitor is located at the top of the screen
 import React from 'react';
 import { useNoteContext } from '@/contexts/note-context';
 import { MIDI_TYPE_STRING } from '@/config/config';
+import { map } from '@/utils/utils';
 
 export default function ControllerMonitor() {
-  const { controller, savedPreference } = useNoteContext();
+  const { controller, preference } = useNoteContext();
   
   // Safely get the MIDI type string
   const getMidiTypeString = () => {
-    if (savedPreference.midiType === null || 
-        savedPreference.midiType === undefined || 
-        isNaN(savedPreference.midiType)) {
-      return 'SINE';
+    if (preference.midiType === null || 
+        preference.midiType === undefined || 
+        isNaN(preference.midiType)) {
+      return 'UNKNOWN';
+    } else {
+      const mappedMidiType = map(preference.midiType, -127, 127, 0, 127)
+      const midiTypeIdx = Math.floor(mappedMidiType / 2) % MIDI_TYPE_STRING.length;
+      return MIDI_TYPE_STRING[midiTypeIdx] || 'UNKNOWN';
     }
-    return MIDI_TYPE_STRING[savedPreference.midiType] || 'UNKNOWN';
   };
 
   return (

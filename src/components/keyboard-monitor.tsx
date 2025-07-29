@@ -3,8 +3,8 @@ import { useNoteContext } from '@/contexts/note-context';
 import { useWebAudioSynth } from '@/hooks/useWebAudioSynth';
 
 export default function KeyboardMonitor() {
-  const { notes, controller, savedPreference } = useNoteContext();
-  const { playNotes, stopAll } = useWebAudioSynth(savedPreference);
+  const { notes, controller, preference } = useNoteContext();
+  const { playNotes, stopAll } = useWebAudioSynth(preference);
 
   // TODO: move this somewhere
   useEffect(() => {

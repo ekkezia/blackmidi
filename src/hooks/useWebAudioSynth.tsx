@@ -63,16 +63,16 @@ export function useWebAudioSynth(preference: TPreference) {
   // 🎚️ Update both gain and delay
   useEffect(() => {
     console.log('=== PREFERENCE UPDATE DEBUG ===');
-    console.log('Raw preference object:', preference);
+    // console.log('Raw preference object:', preference);
 
     // Update GAIN
     if (masterGainRef.current && typeof preference.gain === 'number' && !isNaN(preference.gain)) {
       try {
         const mappedGain = map(preference.gain, -127, 127, 0.1, 1.0);
         masterGainRef.current.gain.value = mappedGain;
-        console.log('✅ Updated master gain:', preference.gain, '→', mappedGain);
+        // console.log('✅ Updated master gain:', preference.gain, '→', mappedGain);
       } catch (error) {
-        console.log('❌ Error updating gain:', error);
+        console.warn('❌ Error updating gain:', error);
       }
     }
 
@@ -81,9 +81,9 @@ export function useWebAudioSynth(preference: TPreference) {
       try {
         const mappedDelay = map(preference.delay, -127, 127, 0, 1.0); // 0.05s to 1s delay
         delayRef.current.delayTime.value = mappedDelay;
-        console.log('✅ Updated delay time:', preference.delay, '→', mappedDelay, 'seconds');
+        // console.log('✅ Updated delay time:', preference.delay, '→', mappedDelay, 'seconds');
       } catch (error) {
-        console.log('❌ Error updating delay:', error);
+        console.warn('❌ Error updating delay:', error);
       }
     }
 
@@ -92,9 +92,9 @@ export function useWebAudioSynth(preference: TPreference) {
       try {
         const mappedFeedback = map(preference.gain, -127, 127, 0, 0.6); // Conservative feedback
         feedbackRef.current.gain.value = mappedFeedback;
-        console.log('✅ Updated feedback:', preference.gain, '→', mappedFeedback);
+        // console.log('✅ Updated feedback:', preference.gain, '→', mappedFeedback);
       } catch (error) {
-        console.log('❌ Error updating feedback:', error);
+        console.warn('❌ Error updating feedback:', error);
       }
     }
 
@@ -106,7 +106,7 @@ export function useWebAudioSynth(preference: TPreference) {
         const newWaveType = MIDI_TYPE_STRING[waveIndex];
         
         currentWaveType.current = newWaveType;
-        console.log('✅ Updated wave type:', preference.midiType, '→', newWaveType, `(index: ${waveIndex})`);
+        // console.log('✅ Updated wave type:', preference.midiType, '→', newWaveType, `(index: ${waveIndex})`);
         
         // Update all currently playing oscillators
         for (const midi in activeOscillators.current) {
@@ -115,13 +115,13 @@ export function useWebAudioSynth(preference: TPreference) {
             osc.type = newWaveType;
           } catch (e) {
             // Oscillator might be in a state where type can't be changed
-            console.log('Could not update oscillator type for MIDI', midi);
+            console.warn('Could not update oscillator type for MIDI', midi);
           }
         }
         
-        console.log('✅ Updated', Object.keys(activeOscillators.current).length, 'active oscillators to', newWaveType);
+        // console.log('✅ Updated', Object.keys(activeOscillators.current).length, 'active oscillators to', newWaveType);
       } catch (error) {
-        console.log('❌ Error updating MIDI type:', error);
+        console.warn('❌ Error updating MIDI type:', error);
       }
     }
 
@@ -155,10 +155,10 @@ export function useWebAudioSynth(preference: TPreference) {
   
     if (ctx.state === 'suspended') {
       await ctx.resume();
-      console.log("AudioContext resumed");
+      // console.log("AudioContext resumed");
     }
 
-    console.log('Playing notes:', midiArray, 'Master gain:', masterGain.gain.value, 'Individual note gain: 0.1');
+    // console.log('Playing notes:', midiArray, 'Master gain:', masterGain.gain.value, 'Individual note gain: 0.1');
   
     const incomingNotes = new Set(midiArray.map(midi => midi + octave * 12));
     const currentlyPlaying = Object.keys(activeOscillators.current).map(Number);

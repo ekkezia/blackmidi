@@ -1,3 +1,4 @@
+// UNUSED
 // hooks/useToneSynth.ts
 import { useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';

@@ -1,3 +1,5 @@
+import { Controller } from '@/sanity/lib/queries';
+
 const STARTING_NOTE = 48;
 export const white = [48, 50, 52, 53, 55, 57, 59, 60, 62, 64,65,67,69,71, 72];
 export const black = [49, 51, 54, 56, 58, 61, 63, 66, 68, 70, ];
@@ -13,3 +15,20 @@ export const QWERTY_KEYS: Record<string, number> = {
 };
 
 export const MIDI_TYPE_STRING: OscillatorType[] = ['sine', 'square', 'triangle', 'sawtooth'];
+
+export const DEFAULT_CONFIG: Controller = {
+  _id: 'default',
+  name: 'default controller config',
+  knobs: [{
+    _id: 'default',
+    label: 'default knob',
+    for: 'color', // 'color' | 'mod74' | 'mod75' | 'scrollV' | 'scrollH
+    midiNote: 80
+  }],
+  sliders: [{
+    _id: 'default',
+    label: 'default knob',
+    for: 'color' ,// 'color' | 'mod74' | 'mod75' | 'scrollV' | 'scrollH
+    midiNote: 80,
+  }],
+};

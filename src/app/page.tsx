@@ -11,7 +11,7 @@ import HelpModal from '@/components/help-modal';
 export default function Home() {
   return (
     <NoteProvider>
-        <FilterContainer className="w-screen h-screen relative overflow-hidden">
+        <FilterContainer className="w-screen h-dvh relative overflow-hidden">
           <ControllerBoard className="absolute top-0 border-b py-2 w-full z-1 bg-background overflow-x-scroll" />
           <HelpModal />
           <Keyboard className="absolute bottom-0 border-t py-4 w-full z-1 bg-background overflow-x-scroll" />

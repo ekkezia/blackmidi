@@ -8,7 +8,7 @@ const HelpModal = () => {
   }
 
   return (
-      <div className={cn("fixed w-screen h-screen top-0 left-0 z-[999] items-center justify-center flex", showHelp ? 'flex' : 'hidden')}>
+      <div className={cn("fixed w-screen h-dvh top-0 left-0 z-[999] items-center justify-center flex", showHelp ? 'flex' : 'hidden')}>
         <div className="border border-foreground p-4 w-[360px] h-fit flex flex-col gap-4 items-center justify-center bg-black">
         <p className="text-center">♫⋆｡♪ ₊˚♬.blackmidi♫⋆｡♪ ₊˚♬ﾟ.</p>
         <p className="text-center">

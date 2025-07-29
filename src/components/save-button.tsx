@@ -5,22 +5,21 @@ import { Tooltip } from './tooltip';
 
 const lockMidiNote = 46;
 const SaveSettingsButton = () => {
-  const { notes, savedPreference, hasSaved, setHasSaved } = useNoteContext();
+  const { notes, preference, hasSavedToLocalStorage, setHasSavedToLocalStorage } = useNoteContext();
 
-    const timeoutRef = useRef(null);
+    // const timeoutRef = useRef(null);
   
     const handleClick = useCallback(() => {
       // saving to local storage
-      if (!hasSaved) {
-        setHasSaved(true);
-        console.log('Saving preference', savedPreference, hasSaved);
+      if (!hasSavedToLocalStorage) {
+        setHasSavedToLocalStorage(true);
   
-        Object.entries(savedPreference).forEach(([key, val]) => {
+        Object.entries(preference).forEach(([key, val]) => {
           localStorage.setItem(key, val.toString());
         })
     
       }
-  }, [hasSaved, setHasSaved, savedPreference]);
+  }, [hasSavedToLocalStorage, setHasSavedToLocalStorage, preference]);
   
     useEffect(() => {
       let timeoutLock: NodeJS.Timeout | undefined;
@@ -43,8 +42,8 @@ const SaveSettingsButton = () => {
   
 
   return (
-    <Tooltip content={hasSaved ? 'Preference is saved.' : 'Save new preference'}>
-      <button className={cn("border-foreground border w-12 h-12 hover:bg-foreground hover:text-background cursor-pointer flex items-end justify-center text-xs", hasSaved ? 'bg-foreground text-background' : 'bg-background text-foreground')} onClick={handleClick}>{hasSaved ? 'SAVED' : 'SAVE'}</button>
+    <Tooltip content={hasSavedToLocalStorage ? 'Preference is saved.' : 'Save new preference'}>
+      <button className={cn("border-foreground border w-12 h-12 hover:bg-foreground hover:text-background cursor-pointer flex items-end justify-center text-xs", hasSavedToLocalStorage ? 'bg-foreground text-background' : 'bg-background text-foreground')} onClick={handleClick}>{hasSavedToLocalStorage ? 'SAVED' : 'SAVE'}</button>
     </Tooltip>
   )
 }

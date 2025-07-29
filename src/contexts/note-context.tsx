@@ -19,17 +19,14 @@ type NoteContextType = {
   notes: number[];
   addNote: (note: number, isArray?: boolean) => void;
   removeNote: (note: number) => void;
-  octave: number;
-  increaseOctave: (octave: number) => void;
-  decreaseOctave: (octave: number) => void;
   controller: { number: number, value: number };
   setController: (controller: { number: number, value: number }) => void;
   lock: boolean;
   setLock: (show: boolean) => void;
-  hasSaved: boolean;
-  setHasSaved: (hasSaved: boolean) => void;
-  savedPreference: TPreference;
-  setSavedPreference: React.Dispatch<React.SetStateAction<TPreference>>;
+  hasSavedToLocalStorage: boolean;
+  setHasSavedToLocalStorage : (hasSaved: boolean) => void;
+  preference: TPreference;
+  setPreference: React.Dispatch<React.SetStateAction<TPreference>>;
   midiSupported?: boolean;
   setMidiSupported?: (supported: boolean) => void;
 };
@@ -42,11 +39,10 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   const [notes, setNotes] = useState<number[]>([]);
   const [controller, setController] = useState({ number: 0, value: 0 });
   const [lock, setLock] = useState(false);
-  const [octave, setOctave] = useState(0);
   const [midiSupported, setMidiSupported] = useState<boolean>(true);
 
-  const [hasSaved, setHasSaved]= useState(false); // save to local storage
-  const [savedPreference, setSavedPreference] = useState({ scrollV: 0, hue: 0, grayscale: 0, invert: 0,   midiType: 0, delay: 0, distortion: 0, gain: 0 }); // TO BE CHANGED to just preference
+  const [hasSavedToLocalStorage, setHasSavedToLocalStorage]= useState(false); // save to local storage
+  const [preference, setPreference] = useState({ scrollV: 0, hue: 0, grayscale: 0, invert: 0,   midiType: 0, delay: 0, distortion: 0, gain: 0 }); 
 
   useEffect(() => {
     // on first load, check local storage for saved preferences
@@ -59,7 +55,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     const savedDistortion = localStorage.getItem('distortion');
     const savedGain = localStorage.getItem('gain');
 
-    setSavedPreference({
+    setPreference({
       scrollV: savedScrollV ? parseInt(savedScrollV, 10) : 0,
       hue: savedHue ? parseInt(savedHue, 10) : 0,
       grayscale: savedGrayscale ? parseInt(savedGrayscale, 10) : 0,
@@ -72,12 +68,12 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (hasSaved) {
+    if (hasSavedToLocalStorage) {
       setTimeout(() => {
-        setHasSaved(false)
+        setHasSavedToLocalStorage(false)
       }, 500);
     }
-  }, [hasSaved])
+  }, [hasSavedToLocalStorage])
 
   const addNote = (note: number, isArray = true) => {
     if (isArray) {
@@ -91,19 +87,19 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
       setNotes((prev) => prev.filter((n) => n !== note));
   };
 
-  const increaseOctave = (octave: number) => {
-    if (octave < 3)
-      setOctave((prev) => prev + 1);
-  };
+  // const increaseOctave = (octave: number) => {
+  //   if (octave < 3)
+  //     setOctave((prev) => prev + 1);
+  // };
 
-  const decreaseOctave = (octave: number) => {
-    if (octave > -3)
-      setOctave((prev) => prev - 1);
-  };
+  // const decreaseOctave = (octave: number) => {
+  //   if (octave > -3)
+  //     setOctave((prev) => prev - 1);
+  // };
 
 
   return (
-    <NoteContext.Provider value={{ showHelp, setShowHelp, inputType, setInputType, notes, addNote, removeNote, controller, setController, lock, setLock, octave, increaseOctave, decreaseOctave, savedPreference, setSavedPreference, hasSaved, setHasSaved, midiSupported, setMidiSupported }}>
+    <NoteContext.Provider value={{ showHelp, setShowHelp, inputType, setInputType, notes, addNote, removeNote, controller, setController, lock, setLock, preference, setPreference, hasSavedToLocalStorage, setHasSavedToLocalStorage, midiSupported, setMidiSupported }}>
       {children}
     </NoteContext.Provider>
   );
@@ -115,14 +111,4 @@ export const useNoteContext = (): NoteContextType => {
     throw new Error('useNotes must be used within a NoteProvider');
   }
   return context;
-};
-
-const startNote = 48;
-const referenceNotes = ['C3', 'Db3', 'D3', 'Eb3', 'E3', 'F3', 'Gb3', 'G3', 'Ab3', 'A3', 'Bb3', 'B3'];
-export const convertNote = (note: number) => {
-  const index = note - startNote;
-  if (index >= 0 && index < referenceNotes.length) {
-    return referenceNotes[index];
-  }
-  return null;
 };

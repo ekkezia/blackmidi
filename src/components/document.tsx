@@ -4,38 +4,29 @@ import { cn, map } from '@/utils/utils';
 import { useConfig } from '@/hooks/useConfig';
 import { ScoreDisplay } from './score-display';
 
-const selectedSliderController = 82;
-
 const Document = ({ className }: { className?: string }) => {
-  const { notes, controller, showHelp, lock, savedPreference } = useNoteContext();
+  const { notes, showHelp, lock, preference } = useNoteContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { config } = useConfig();
   const [currentDocIdx, setCurrentDocIdx] = useState(0); // doc is the latest note pushed
-  // const [mappedValue, setMappedValue] = useState<{ [key: string] : number }>({});
 
   useEffect(() => {
     if (notes.length > 0 && !lock) {
       const idx = config.findIndex((doc) => doc.midiNote === notes[0]);
       if (idx !== -1) {
-        // console.log('idx', idx);
         setCurrentDocIdx(idx);
       }
     }
-  }, [notes, config, lock]); // Don't forget to include config here!
+  }, [notes, config, lock]);
 
   useEffect(() => {
-    if (controller.number === selectedSliderController && containerRef.current) {
-      // console.log('controller', controller)
-      const mappedValue = map(controller.value, 127, 0, -containerRef.current.clientHeight / 2, containerRef.current.clientHeight /2)
+    if (containerRef.current) {
+      const mappedValue = map(preference['scrollV'], 127, 0, -containerRef.current.clientHeight / 2, containerRef.current.clientHeight /2);
+
       containerRef.current.style.transform = `translateY(${mappedValue}px)`;
     }
-
-    // if (mappedValue[selectedSliderController] && horizontalRef.current) {
-    //   horizontalRef.current.style.transform = `translateX(${mappedValue[selectedSliderController]}px)`;
-    // }
-  }, [controller, containerRef]);
-
+  }, [preference]);
 
   return (
     <div >
@@ -43,7 +34,6 @@ const Document = ({ className }: { className?: string }) => {
     ref={containerRef}
     >
     {config[currentDocIdx]?.score && <ScoreDisplay score={config[currentDocIdx].score} />}
-    {/* {notes[0] && config[currentDocIdx]&& <img src={`/scores/${config[currentDocIdx].img}`} alt={config[currentDocIdx].label} width="100%" />} */}
     </div>
     </div>
   )

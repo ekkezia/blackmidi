@@ -1,4 +1,5 @@
 // src/hooks/useConfig.ts
+// fetch data from Sanity CMS
 import { useEffect, useState } from 'react';
 import { Controller, getControllers, getSongs, Song } from '@/sanity/lib/queries';
 
